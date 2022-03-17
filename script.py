@@ -26,11 +26,11 @@ else:
 
 #RI: Code de scrapping du site http://books.toscrape.com/
 
-# RI: Je récupère les éléments qui m'intéressent "text" stocké dans ma variable "reponse":
+# RI: Je récupère les éléments qui m'intéressent "text" stocké dans ma variable "reponse": 
+######## --> REMARQUE RICKEL: 17/04/2022 PASSER PARAMETRE DE PARSER a beautifulSoup html.parser (A VOIR) / risque de problème d'encodage en utilisant .text
 soup = BeautifulSoup(reponse.text)
 
 #   RI: Cette partie va rechercher les balises etc qui m'intéressent title, headers etc. 
 #       le .text précise qu on veut récup uniquement en format text sans les balises  
 title = soup.find("title")
 print(title.text)
-
