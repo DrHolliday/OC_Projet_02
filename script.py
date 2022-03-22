@@ -15,24 +15,26 @@ else:
     print("Problème avec le site voir doc code:", reponse)
 
 
-#RI: Code de scrapping du site http://books.toscrape.com/
-
-# RI: Je récupère les éléments qui m'intéressent "text" stocké dans ma variable "reponse": 
-######## OK ! 22/03 --> REMARQUE RICKEL: 17/03/2022 PASSER PARAMETRE DE PARSER a beautifulSoup html.parser (A VOIR) / risque de problème d'encodage en utilisant .text
+# RI: Je récupère les éléments qui m'intéressent "text" stocké dans ma variable "reponse" utiliser un parser html.parser pour bypass erreur. 
 
 soup = BeautifulSoup(reponse.text, "html.parser")
 
-#   RI: Cette partie va rechercher les balises etc qui m'intéressent title, headers etc. 
-#       le .text précise qu on veut récup uniquement en format text sans les balises !  
-title = soup.find("title")
-print(title.text)
 
-#   RI: Fonction de récupération des catégories. 
-li = soup.findAll("li")
-print(len(li))
+# RI: Boucle de récupération des catégories (tous les a) en ciblanc "ul" et sa "classe" .nav nav-list 
 
-# VOIR exemple ici : https://stackoverflow.com/questions/4362981/beautifulsoup-how-do-i-extract-all-the-lis-from-a-list-of-uls-that-contains
-categories = soup.findAll(class_="nav nav-list")
-print(len(categories))
+categories = soup.findAll("a")
+for categories in soup.find("ul", class_="nav nav-list"):
+    print(categories.text)
 
-print("stop")
+
+# RI: Fonction pour récupérer sur une page produit ( http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html )
+url = "http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
+reponse = requests.get(url)
+soup = BeautifulSoup(reponse.text, "html.parser")
+
+titre = soup.find("h1")
+details = soup.find("table", class_="table table-striped")
+
+print(titre.text)
+print(url)
+print(details.text)
