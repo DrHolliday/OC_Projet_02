@@ -15,22 +15,24 @@ else:
     print("Problème avec le site voir doc code:", reponse)
 
 
-# RI:--------------------[ TESTS DEBUT ]--------------------
-
-# afficher le contenu qui nous intéresse: (test sur text, headers, balises etc)
-# print(reponse.text)
-
-
-# RI:---------------------[ TESTS FIN ]---------------------
-
-
 #RI: Code de scrapping du site http://books.toscrape.com/
 
 # RI: Je récupère les éléments qui m'intéressent "text" stocké dans ma variable "reponse": 
-######## --> REMARQUE RICKEL: 17/04/2022 PASSER PARAMETRE DE PARSER a beautifulSoup html.parser (A VOIR) / risque de problème d'encodage en utilisant .text
-soup = BeautifulSoup(reponse.text)
+######## OK ! 22/03 --> REMARQUE RICKEL: 17/03/2022 PASSER PARAMETRE DE PARSER a beautifulSoup html.parser (A VOIR) / risque de problème d'encodage en utilisant .text
+
+soup = BeautifulSoup(reponse.text, "html.parser")
 
 #   RI: Cette partie va rechercher les balises etc qui m'intéressent title, headers etc. 
-#       le .text précise qu on veut récup uniquement en format text sans les balises  
+#       le .text précise qu on veut récup uniquement en format text sans les balises !  
 title = soup.find("title")
 print(title.text)
+
+#   RI: Fonction de récupération des catégories. 
+li = soup.findAll("li")
+print(len(li))
+
+# VOIR exemple ici : https://stackoverflow.com/questions/4362981/beautifulsoup-how-do-i-extract-all-the-lis-from-a-list-of-uls-that-contains
+categories = soup.findAll(class_="nav nav-list")
+print(len(categories))
+
+print("stop")
