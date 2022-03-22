@@ -27,7 +27,7 @@ for categories in soup.find("ul", class_="nav nav-list"):
     print(categories.text)
 
 
-# RI: Fonction pour récupérer sur une page produit ( http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html )
+# RI: Fonction pour récupérer infos d'une page produit ( http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html )
 
 def recupPageProduit():
     # url = "http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
