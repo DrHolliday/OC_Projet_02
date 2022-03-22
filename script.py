@@ -28,13 +28,18 @@ for categories in soup.find("ul", class_="nav nav-list"):
 
 
 # RI: Fonction pour récupérer sur une page produit ( http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html )
-url = "http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
-reponse = requests.get(url)
-soup = BeautifulSoup(reponse.text, "html.parser")
 
-titre = soup.find("h1")
-details = soup.find("table", class_="table table-striped")
+def recupPageProduit():
+    # url = "http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
+    url = input("Entrez l'url du produit")
+    reponse = requests.get(url)
+    soup = BeautifulSoup(reponse.text, "html.parser")
 
-print(titre.text)
-print(url)
-print(details.text)
+    titre = soup.find("h1")
+    details = soup.find("table", class_="table table-striped")
+
+    print(titre.text)
+    print(url)
+    print(details.text)
+
+recupPageProduit()
