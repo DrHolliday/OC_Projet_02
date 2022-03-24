@@ -11,20 +11,16 @@ if reponse.ok:
     liens = []
     soup = BeautifulSoup(reponse.text, "html.parser")
 
-    #RI: Je cible le div qui contient les catégories (plutôt que de cibler toute la page)
-    div = soup.find("div" , class_="side_categories")
+    #RI + RICKEL ! BONNE METHODE ! 24/03/22: Je cible le div qui contient les catégories (plutôt que de cibler toute la page) 
+    div = soup.find("div" , class_="side_categories").find("ul" , class_="nav nav-list").find("ul")
 
     #RI: Je boucle dans le div pour récupérer les liens des catégories:
-    for elem in div.findAll("li"):
-            a = elem.find("a")
-            #RI: Teste si la balise a possède un attribut href et append dans ma liste "liens" si c'est le cas.
-            try:
-                if "href" in a.attrs:
-                    url = a.get("href")
-                    liens.append(url)
-            except:
-                pass
-            for url in liens:
-                print(url)
+    for elem in div.findAll("a"):
+
+        #RI: Teste si la balise a possède un attribut href et append dans ma liste "liens" si c'est le cas.
+        liens.append(elem["href"])
+
+for url in liens:
+    print(url)
 
 #RI: Récupérer toutes les catégories de la page home (FIN !)
