@@ -1,6 +1,7 @@
 #RI: Importation des packages necessaire au projet: 
 from re import T
 from textwrap import indent
+from numpy import append
 import requests
 #BSA pour beautifullsoup et requete sur tag html etc.
 from bs4 import BeautifulSoup
@@ -13,14 +14,58 @@ import shutil
 # -- Dataframe du produit
 # ---- A FAIRE FIN --------------------------------------
 
+url = "http://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
+reponse = requests.get(url)
+soup = BeautifulSoup(reponse.text, "html.parser")
+
+
+#RI: Script qui vérifie chaque produits d'une catégorie et lance recupPageProduit a chaque produit trouvé dans la catégorie:
+#RI:  http://books.toscrape.com/catalogue/category/books/mystery_3/index.html
+
+
+#RI: Fonction qui vérifie si la catégorie contient plusieurs pages:
+def pagesCategorie():
+
+    tableauPages = [url,]
+    #RI: Si ul class_"pager" existe alors enregistre les pages dans tableauPages sinon fait la page en cours
+    pagerExists = soup.find("ul", class_="pager")
+    if pagerExists:
+        print("Il y a plusieurs pages pour cette catégorie")
+        #RI: Trouver et enregistrer l'url des pages existantes dans un tableau
+        liens = pagerExists.findAll("a", href=True)
+        for a in liens:
+            #RI: Concaténer l'url pour les pages en utilisant l'url de la page source et remplace index.html par nvlle pages existantes
+            a = format(str( url.replace("index.html", "") + a["href"]) )
+            tableauPages.append(a)
+            print(tableauPages)
+    else:
+        print("Aucune autre page")
+
+# pagesCategorie()
+
+
+#RI: Fonction findUrl récupère l'url de toutes les pages produit d'une catégorie et les stock dans un tableau
+def findUrl():
+
+    tableauUrl = []
+
+    for lis in soup.findAll("li", class_="col-xs-6 col-sm-4 col-md-3 col-lg-3"):
+        h3 = lis.find("h3")
+        links = h3.findAll("a", href=True)
+        for a in links:
+            a = format(str(a["href"]).replace("../../../", "http://books.toscrape.com/"))
+            tableauUrl.append(a)
+    
+    print(tableauUrl)
+
+# findUrl()
+
+
 # RI: Fonction pour récupérer infos d'une page produit et enregistrer dans une liste
-
 def recupPageProduit():
-    url = "http://books.toscrape.com/catalogue/sapiens-a-brief-history-of-humankind_996/index.html"
-    # url = "http://books.toscrape.com/catalogue/thomas-jefferson-and-the-tripoli-pirates-the-forgotten-war-that-changed-american-history_867/index.html"
-
-    reponse = requests.get(url)
-    soup = BeautifulSoup(reponse.text, "html.parser")
+    # url = "http://books.toscrape.com/catalogue/sapiens-a-brief-history-of-humankind_996/index.html"
+    # reponse = requests.get(url)
+    # soup = BeautifulSoup(reponse.text, "html.parser")
 
     #RI: Récupération des parties qui m'intéressent et l'afficher/stocker:
     productPageUrl = url
@@ -36,7 +81,6 @@ def recupPageProduit():
     image = str(soup.find("div", class_="item active").find("img").get("src")).replace("../../" , "http://books.toscrape.com/")
     print(titre)
     #RI : Vérification dossier images (création si non existant) Sauvegarde de l illustration dans le dossier
-    #RI: voir https://www.scrapingbee.com/blog/download-image-python/
     dossierImages = "images"
     isExist = os.path.exists(dossierImages)
     if isExist:
@@ -69,51 +113,18 @@ def recupPageProduit():
 
 # recupPageProduit()
 
-#RI: Script qui vérifie chaque produits d'une catégorie et lance recupPageProduit a chaque produit trouvé dans la catégorie:
-#RI:  http://books.toscrape.com/catalogue/category/books/mystery_3/index.html
 
-#RI: Fonction qui vérifie si la catégorie contient plusieurs pages:
-def pagesCategorie():
-    url = "http://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
-    reponse = requests.get(url)
-    soup = BeautifulSoup(reponse.text, "html.parser")
-
-    tableauPages = []
-
-    #RI: Si ul class_"pager" existe alors enregistre les pages dans tableauPages sinon fait la page en cours
-    pagerExists = soup.find("ul", class_="pager")
-    if pagerExists:
-        print("Il y a plusieurs pages")
-        #RI: Trouver et enregistrer l'url des pages existantes dans un tableau
-        tableauPages = []
-        liens = pagerExists.findAll("a", href=True)
-        for a in liens:
-            #RI: Concaténer l'url pour les pages en utilisant l'url de la page source + numéro de page si existante
-            a = format(str( url.replace("index.html", "") + a["href"]) )
-            tableauPages.append(a)
-            print(tableauPages)    
-
-    else:
-        print("Aucune autre page")
-
-pagesCategorie()
-
-
-#RI: fonction findUrl récupère l'url de toutes les pages produit d'une catégorie et les stock dans un tableau
-def findUrl():
-    url = "http://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
-    reponse = requests.get(url)
-    soup = BeautifulSoup(reponse.text, "html.parser")
-
-    tableauUrl = []
-
-    for lis in soup.findAll("li", class_="col-xs-6 col-sm-4 col-md-3 col-lg-3"):
-        h3 = lis.find("h3")
-        links = h3.findAll("a", href=True)
-        for a in links:
-            a = format(str(a["href"]).replace("../../../", "http://books.toscrape.com/"))
-            tableauUrl.append(a)
-    
-    print(tableauUrl)
-
+#RI: Créer un script qui utilise les 3 fonctions plus haut sur une url ! pour le faire réaliser l'opération
+# pagesCategorie()
 # findUrl()
+# recupPageProduit()
+
+def recupTouteLaCategorie():
+    listePage = pagesCategorie()
+    print(listePage)
+    #RI: python APPLY A FUNCTION TO A LIST ? appliquer la fonction a ma liste de page ? ...
+
+
+
+
+recupTouteLaCategorie()
