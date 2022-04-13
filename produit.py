@@ -10,13 +10,13 @@ import pandas as pd
 import os
 import shutil
 
-# ---- A FAIRE ------------------------------------------
-# -- Dataframe du produit
-# ---- A FAIRE FIN --------------------------------------
+# ---- A FAIRE --------URL DYNAMIQUE pour pages             ---------------
+# https://stackabuse.com/guide-to-parsing-html-with-beautifulsoup-in-python/
+# ---- A FAIRE FIN                    --------------------------------------
 
-url = "http://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
-reponse = requests.get(url)
-soup = BeautifulSoup(reponse.text, "html.parser")
+# url = "https://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
+# reponse = requests.get(url)
+# soup = BeautifulSoup(reponse.text, "html.parser")
 
 
 #RI: Script qui vérifie chaque produits d'une catégorie et lance recupPageProduit a chaque produit trouvé dans la catégorie:
@@ -37,7 +37,8 @@ def pagesCategorie():
             #RI: Concaténer l'url pour les pages en utilisant l'url de la page source et remplace index.html par nvlle pages existantes
             a = format(str( url.replace("index.html", "") + a["href"]) )
             tableauPages.append(a)
-            print(tableauPages)
+            return(tableauPages)
+            
     else:
         print("Aucune autre page")
 
@@ -53,11 +54,12 @@ def findUrl():
         h3 = lis.find("h3")
         links = h3.findAll("a", href=True)
         for a in links:
-            a = format(str(a["href"]).replace("../../../", "http://books.toscrape.com/"))
+            a = format(str(a["href"]).replace("../../../", "http://books.toscrape.com/catalogue/"))
             tableauUrl.append(a)
-    
-    print(tableauUrl)
 
+    print(tableauUrl)
+    return(tableauUrl)
+    
 # findUrl()
 
 
@@ -120,10 +122,54 @@ def recupPageProduit():
 # recupPageProduit()
 
 def recupTouteLaCategorie():
-    listePage = pagesCategorie()
-    print(listePage)
-    #RI: python APPLY A FUNCTION TO A LIST ? appliquer la fonction a ma liste de page ? ...
+    global url
+    url = "https://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
+    global reponse
+    reponse = requests.get(url)
+    global soup
+    soup = BeautifulSoup(reponse.text, "html.parser")
+    
+    pagesCategories = pagesCategorie()
+    print(pagesCategories)
+    print("ma page courante" ,url)
 
+    #RI: Je récupère ma fonction de recherche d'url avant le changement de page et ensuite apres...
+    tableauUrl = []
+
+    for lis in soup.findAll("li", class_="col-xs-6 col-sm-4 col-md-3 col-lg-3"):
+        h3 = lis.find("h3")
+        links = h3.findAll("a", href=True)
+        for a in links:
+            a = format(str(a["href"]).replace("../../../", "http://books.toscrape.com/catalogue/"))
+            tableauUrl.append(a)
+
+    #RI: Je charge la page numéro 2
+    def changementUrl():
+        global url
+        url = pagesCategories[1]
+        global reponse
+        reponse = requests.get(url)
+        print("ATTNTION CHANGEMENT URL", url)
+        global soup
+        soup = BeautifulSoup(reponse.text, "html.parser")
+
+    changementUrl()
+
+    #RI: Je relance la recherche dans la nouvelle page et j append a ma variable tableauUrl
+    for lis in soup.findAll("li", class_="col-xs-6 col-sm-4 col-md-3 col-lg-3"):
+        h3 = lis.find("h3")
+        links = h3.findAll("a", href=True)
+        for a in links:
+            a = format(str(a["href"]).replace("../../../", "http://books.toscrape.com/catalogue/"))
+            tableauUrl.append(a)
+    
+    #RI: lancer la fonction en boucle de ficheproduit sur tous les liens du tableau...
+
+    print(tableauUrl)
+
+    for i in tableauUrl:
+        i = print(i)
+        
 
 
 
