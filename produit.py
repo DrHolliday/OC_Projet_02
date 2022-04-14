@@ -194,12 +194,12 @@ def recupTouteLaCategorie():
             res = requests.get(image , stream=True)
             filename = os.path.join(dossierImages, "{0}.jpg" .format(str(titre).replace(":" , "-")) )
             print(filename)
-        if not os.path.isfile(filename):
-            with open(filename, "wb") as images:
-                for content in res.iter_content(1024):
-                    if not content:
-                        break
-                    images.write(content)
+            if not os.path.isfile(filename):
+                with open(filename, "wb") as images:
+                    for content in res.iter_content(1024):
+                        if not content:
+                            break
+                        images.write(content)
         else:
             print("pas de dossier Images")
             #RI : Créer le dossier images
