@@ -11,7 +11,6 @@ import os
 import shutil
 
 # ---- A FAIRE --------URL DYNAMIQUE pour pages             ---------------
-# https://stackabuse.com/guide-to-parsing-html-with-beautifulsoup-in-python/
 # ---- A FAIRE FIN                    --------------------------------------
 
 # url = "https://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
@@ -164,13 +163,57 @@ def recupTouteLaCategorie():
             tableauUrl.append(a)
     
     #RI: lancer la fonction en boucle de ficheproduit sur tous les liens du tableau...
-
     print(tableauUrl)
 
     for i in tableauUrl:
-        i = print(i)
+        url = i
+
+        # print("Test",url)
         
+        reponse = requests.get(url)
+        soup = BeautifulSoup(reponse.text, "html.parser")
 
+        productPageUrl = url
+        prodType = soup.find("th", text="Product Type").find_next_sibling("td").text.strip()
+        upc = soup.find("th", text="UPC").find_next_sibling("td").text.strip()
+        titre = soup.find("h1").text.strip()
+        prixSansTaxe = soup.find("th", text="Price (excl. tax)").find_next_sibling("td").text.strip()
+        prixAvecTaxe = soup.find("th", text="Price (excl. tax)").find_next_sibling("td").text.strip()
+        disponibilite = soup.find("th", text="Availability").find_next_sibling("td").text.strip()
+        description = soup.find("div", id="product_description").find_next_sibling("p").text.strip()
+        categorie = soup.find("ul", class_="breadcrumb").findChildren()[4].find("a").text.strip()
+        reviews = soup.find("th", text="Number of reviews").find_next_sibling("td").text.strip()
+        image = str(soup.find("div", class_="item active").find("img").get("src")).replace("../../" , "http://books.toscrape.com/")
+        print(titre)
+        #RI : Vérification dossier images (création si non existant) Sauvegarde de l illustration dans le dossier
+        dossierImages = "images"
+        isExist = os.path.exists(dossierImages)
+        if isExist:
+            print("Le dossier images existe!")
+            #RI : Alors enregistrer le fichier image dans le dossier images (voir si renommer fichier ?)
+            res = requests.get(image , stream=True)
+            filename = os.path.join(dossierImages, "{0}.jpg" .format(str(titre).replace(":" , "-")) )
+            print(filename)
+        if not os.path.isfile(filename):
+            with open(filename, "wb") as images:
+                for content in res.iter_content(1024):
+                    if not content:
+                        break
+                    images.write(content)
+        else:
+            print("pas de dossier Images")
+            #RI : Créer le dossier images
+            os.makedirs(dossierImages)
+            print("Dossier images créé")
+    
+        #RI: Creation de mon Tableau Avec les données récupérées de la page produit:
+        tableauProduit = [productPageUrl, prodType, upc, titre, prixSansTaxe, prixAvecTaxe, disponibilite, description, categorie, reviews, image]
+        print(tableauProduit)
 
+        #RI: Ecriture dans fichier CSV (livres.csv)
+        produit = pd.DataFrame({"tableauProduit" : tableauProduit})
+        produit = produit.set_index("tableauProduit").T
+        #RI: Ecriture dans le fichier csv en mode "a" = (append, ajouter)
+        produit.to_csv(r'livres.csv', mode = "a", index = False)
 
 recupTouteLaCategorie()
