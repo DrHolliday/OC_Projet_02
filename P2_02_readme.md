@@ -1,6 +1,7 @@
-README.md expliquant comment créer et activer l'environnement virtuel, puis exécuter le code d'application ;
-
-### RI: Création de l'environnement virtuel et installation des paquets:
+### RI: Télécharger les 3 fichiers dans un répertoir que vous nommerez: OC_Projet_02 sur votre disque dur:
+P2_01_codesource.py
+P2_02_readme.md
+P2_03_requirements.txt
 
 
 ### Entrer dans le répertoir du projet téléchargé:
@@ -12,8 +13,8 @@ README.md expliquant comment créer et activer l'environnement virtuel, puis ex�
 ### Activer l'environnement virtuel env: 
 ~ source env/Scripts/activate
 
-### Installer les paquets nécessaire en se servant du fichier requests.txt
-Préciser l
+### Installer les paquets nécessaire en se servant du fichier P2_03_requirements.txt
+~ pip install -r P2_03_requirements.txt
 
-(voir: https://openclassrooms.com/fr/courses/6951236-mettez-en-place-votre-environnement-python/7014018-creez-votre-premier-environnement-virtuel)
-
+### lancer le script P2_01_codesource.py
+~ python P2_01_codesource.py
