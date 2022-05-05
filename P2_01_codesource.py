@@ -6,7 +6,7 @@ import urllib.parse
 import pandas as pd
 import os
 
-#RI: ATTENTION ! Les vérifications de toutes les fonctions nécesscitent une l'url de categorie qui contient le plus grand nombre de pages produits "https://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html")
+#RI: ATTENTION ! Les vérifications de toutes les fonctions nécesscitent l'url de categorie qui contient le plus grand nombre de pages produits "https://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html")
 url = "https://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html"
 reponse = requests.get(url)
 soup = BeautifulSoup(reponse.content.decode("utf-8" , "ignore") , "html.parser")
@@ -147,19 +147,7 @@ def pageProduitParCategorie():
 # pageProduitParCategorie()
 
 
-#RI: T E S T S  !!!!!! ->
-
-# tableauDeTest = ["https://books.toscrape.com/catalogue/category/books/paranormal_24/index.html" , "https://books.toscrape.com/catalogue/category/books/nonfiction_13/index.html" , "https://books.toscrape.com/catalogue/category/books/young-adult_21/index.html"]
-
-# for i in tableauDeTest:
-#     url = i
-#     pageProduitParCategorie()
-
-#RI: Ca marche aussi 
-
-
-
-#RI: SCRIPT FINAL POUR LANCER LE SCRAPPING SUR TOUT LE SITE: (ça fonctionne 03/05/2022 10H20)
+#RI: SCRIPT FINAL POUR LANCER LE SCRAPPING SUR TOUT LE SITE:
 for i in toutesLesCategories():
     url = i
     pageProduitParCategorie()
