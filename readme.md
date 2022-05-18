@@ -1,7 +1,7 @@
 ### RI: Télécharger les 3 fichiers dans un répertoir que vous nommerez: OC_Projet_02 sur votre disque dur:
-Ialacci_Renaud_1_codesource_042022.py
-Ialacci_Renaud_2_readme_042022.md
-Ialacci_Renaud_3_requirements_042022.txt
+codesource.py
+readme.md
+requirements.txt
 
 
 ### Entrer dans le répertoir du projet téléchargé:
@@ -14,7 +14,7 @@ Ialacci_Renaud_3_requirements_042022.txt
 ~ source env/Scripts/activate
 
 ### Installer les paquets nécessaire en se servant du fichier P2_03_requirements.txt
-~ pip install -r Ialacci_Renaud_3_requirements_042022.txt
+~ pip install -r requirements.txt
 
 ### lancer le script P2_01_codesource.py
-~ python Ialacci_Renaud_1_codesource_042022.py
+~ python codesource.py
